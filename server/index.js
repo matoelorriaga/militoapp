@@ -1,12 +1,11 @@
 const express = require('express');
+const pino = require('express-pino-logger');
 const path = require('path');
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 
 const isDev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 5000;
-
-const pino = require('express-pino-logger')();
 
 // Multi-process to utilize all CPU cores.
 if (!isDev && cluster.isMaster) {
@@ -23,15 +22,16 @@ if (!isDev && cluster.isMaster) {
 
 } else {
   const app = express();
-  app.use(pino)
+  app.use(pino());
 
   // Priority serve any static files.
   app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 
   // Answer API requests.
-  app.get('/api', function (req, res) {
-    res.set('Content-Type', 'application/json');
-    res.send('{"message":"Hello from the custom server!"}');
+  app.get('/api/greeting', (req, res) => {
+    const name = req.query.name || 'World';
+    res.setHeader('Content-Type', 'application/json');
+    res.json({ greeting: `Hello ${name}!` });
   });
 
   // All remaining requests return the React app, so it can handle routing.
