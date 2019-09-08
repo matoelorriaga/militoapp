@@ -6,7 +6,7 @@
     "node": "10.x"
   },
   "scripts": {
-    "start": "node server",
+    "start": "nodemon server | pino-colada",
     "build": "cd react-ui/ && npm install && npm run build"
   },
   "cacheDirectories": [
@@ -27,5 +27,9 @@
     "react"
   ],
   "license": "MIT",
-  "devDependencies": {}
+  "devDependencies": {
+    "nodemon": "^1.19.2",
+    "express-pino-logger": "^4.0.0",
+    "pino-colada": "^1.4.5"
+  }
 }

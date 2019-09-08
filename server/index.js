@@ -6,6 +6,8 @@ const numCPUs = require('os').cpus().length;
 const isDev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 5000;
 
+const pino = require('express-pino-logger')();
+
 // Multi-process to utilize all CPU cores.
 if (!isDev && cluster.isMaster) {
   console.error(`Node cluster master ${process.pid} is running`);
@@ -21,6 +23,7 @@ if (!isDev && cluster.isMaster) {
 
 } else {
   const app = express();
+  app.use(pino)
 
   // Priority serve any static files.
   app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
