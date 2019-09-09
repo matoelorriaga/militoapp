@@ -8,8 +8,10 @@
   "scripts": {
     "build": "cd react-ui/ && npm install && npm run build",
     "start": "nodemon server | pino-colada",
+    "start-debug": "nodemon --inspect server | pino-colada",
     "start-ui": "cd react-ui/ && npm start",
-    "dev": "run-p start start-ui"
+    "dev": "run-p start start-ui",
+    "dev-debug": "run-p start-debug start-ui"
   },
   "cacheDirectories": [
     "node_modules",

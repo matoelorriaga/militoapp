@@ -30,7 +30,6 @@ if (!isDev && cluster.isMaster) {
   // Answer API requests.
   app.get('/api/greeting', (req, res) => {
     const name = req.query.name || 'World';
-    res.setHeader('Content-Type', 'application/json');
     res.json({ greeting: `Hello ${name}!` });
   });
 
