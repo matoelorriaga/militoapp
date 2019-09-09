@@ -3,6 +3,8 @@ const pino = require('express-pino-logger');
 const path = require('path');
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
+const Database = require('./database');
+const Api = require('./api');
 
 const isDev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 5000;
@@ -24,14 +26,15 @@ if (!isDev && cluster.isMaster) {
   const app = express();
   app.use(pino());
 
+  // Database calls
+  const database = new Database();
+  database.run();
+
   // Priority serve any static files.
   app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 
   // Answer API requests.
-  app.get('/api/greeting', (req, res) => {
-    const name = req.query.name || 'World';
-    res.json({ greeting: `Hello ${name}!` });
-  });
+  const api = new Api(app);
 
   // All remaining requests return the React app, so it can handle routing.
   app.get('*', function(request, response) {
